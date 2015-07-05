@@ -4,12 +4,9 @@ class Field
     @width = x
     @length = y
     @impl = []
-    (@width*@length).times do 
-      @impl.push('')
-    end
   end
 
-  def defecate
+  def defecate #Пилился раньше, сейчас не работает совсем.
     for y in 0...@length
       for x in 0...@width
         print @impl[@width * y + x] + " "
@@ -43,15 +40,21 @@ class Field
     self.each {|cell| cell.check_neighbours}
   end
 
+  attr_reader :width 
+  attr_reader :length
+
 end
 
 
 
 class Cell
 
-  def initialize(field)
+  def initialize(field, x, y)
+    @x = x
+    @y = y
     @alive = false
     @field = field
+    field.write_at(x, y, self)
   end
 
   def despawn
@@ -79,6 +82,9 @@ class Cell
 
 end
 
+field = Field.new(10, 10)
+
+cell = Cell.new(field, 1, 1)
 
 
 __END__
