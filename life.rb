@@ -1,3 +1,5 @@
+Field = Array
+
 class Field 
 
   def initialize(x, y)
@@ -6,10 +8,10 @@ class Field
     @impl = []
   end
 
-  def defecate #Пилился раньше, сейчас не работает совсем.
+  def defecate 
     for y in 0...@length
       for x in 0...@width
-        print @impl[@width * y + x] + " "
+        print @impl[@width * y + x].to_s + " "
       end
       puts
     end
@@ -25,6 +27,7 @@ class Field
               .push(self.read_at(x-1, y+1))
               .push(self.read_at(x, y-1))
               .push(self.read_at(x+1, y+1))
+    return neighbours
   end
 
   def write_at(x, y, element) 
@@ -52,13 +55,25 @@ class Cell
   def initialize(field, x, y)
     @x = x
     @y = y
-    @alive = false
     @field = field
     field.write_at(x, y, self)
+    if rand() > 0.7
+      @alive = true
+    else
+      @alive = false
+    end
   end
 
   def despawn
     @alive = false
+  end
+
+  def to_s
+    if dead?
+      "·"
+    else
+      "●"
+    end
   end
 
   def spawn
@@ -70,8 +85,7 @@ class Cell
   end
 
   def check_neighbours
-    neighbours = @field.get_neighbours
-    neighbours.reject!{|cell| cell.dead?}
+    neighbours = @field.get_neighbours(@x, @y).reject!{|cell| cell.dead?}
     if neighbours.length == 3
       spawn
     elsif neighbours.length < 2 or neighbours.length > 3
@@ -82,10 +96,25 @@ class Cell
 
 end
 
+def fill_field(field)
+  for x in 0..field.width
+    for y in 0..field.length
+      field.write_at(x, y, Cell.new(field, x, y))
+    end
+  end
+end
+
 field = Field.new(10, 10)
 
-cell = Cell.new(field, 1, 1)
+fill_field(field)
 
+#print field.get_neighbours(5, 5).delete_if{|cell| cell.dead?}
+
+loop do
+  field.defecate
+  field.next_turn
+  gets
+end
 
 __END__
 ○
