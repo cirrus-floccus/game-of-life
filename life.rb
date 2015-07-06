@@ -33,7 +33,6 @@ class Field
 
   def write_at(x, y, element) 
     if x < 0 or x >= @width or y < 0 or y >= @length
-      return nil
     else
       return @impl[@width * y + x] = element
     end
@@ -104,13 +103,15 @@ def fill_field(field)
 end
 
 field = Field.new(50, 50)
-fill_field(field)
+#fill_field(field)
 
-loop do
-  field.defecate
-  field.next_turn
-  gets
-end
+#loop do
+#  field.defecate
+#  field.next_turn
+#  gets
+#end
+field.write_at(0, 0, 'x')
+field.defecate
 
 __END__
 ○
