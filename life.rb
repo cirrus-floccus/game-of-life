@@ -10,7 +10,7 @@ class Field
   def defecate 
     for y in 0...@length
       for x in 0...@width
-        print @impl[@width * y + x].to_s + " "
+        print read_at(x, y).to_s + " "
       end
       puts
     end
@@ -18,18 +18,16 @@ class Field
 
   def get_neighbours(x, y)
     neighbours = []
-    neighbours.push(self.read_at(x-1, y-1))
-              .push(self.read_at(x, y-1))    
-              .push(self.read_at(x+1, y-1))    
-              .push(self.read_at(x-1, y))
-              .push(self.read_at(x+1, y))
-              .push(self.read_at(x-1, y+1))
-              .push(self.read_at(x, y-1))
-              .push(self.read_at(x+1, y+1))
-              .delete_if{|e| e == nil}
-              .delete_if{|cell| cell.dead? == true}
-    return neighbours.size
-    
+    for x in (-1..1)
+      for y in (-1..1)
+        if x == 0 and y == 0
+          #Хэй, мэн, оно ж ничего не делает!
+        else
+          neighbours.push(read_at(x, y))
+        end
+      end
+    end
+    return neighbours.delete_if{|e| e == nil}.delete_if{|cell| cell.dead? == true}.size
   end
 
 
@@ -42,7 +40,7 @@ class Field
   end
 
   def read_at(x, y)
-    if x > 0 and x <= @width and y > 0 and y <=@length
+    if x >= 0 and x <= @width and y >= 0 and y <=@length
       return @impl[@width * y + x]
     else
       return nil
