@@ -1,4 +1,3 @@
-Field = Array
 
 class Field 
 
@@ -27,20 +26,31 @@ class Field
               .push(self.read_at(x-1, y+1))
               .push(self.read_at(x, y-1))
               .push(self.read_at(x+1, y+1))
-    return neighbours
+              .delete_if{|e| e == nil}
+              .delete_if{|cell| cell.dead? == true}
+    return neighbours.size
+    
   end
 
+
   def write_at(x, y, element) 
-    return if x < 0 or x >= @width or y < 0 or y >= @length
-    @impl[@width * y + x] = element
+    if x < 0 or x >= @width or y < 0 or y >= @length
+      return nil
+    else
+      return @impl[@width * y + x] = element
+    end
   end
 
   def read_at(x, y)
-    return @impl[@width * y + x] if x > 0 and x <= @width and y > 0 and y <=@length
+    if x > 0 and x <= @width and y > 0 and y <=@length
+      return @impl[@width * y + x]
+    else
+      return nil
+    end
   end
 
   def next_turn
-    self.each {|cell| cell.check_neighbours}
+    @impl.each {|cell| cell.check_neighbours}
   end
 
   attr_reader :width 
@@ -57,15 +67,11 @@ class Cell
     @y = y
     @field = field
     field.write_at(x, y, self)
-    if rand() > 0.7
+    if rand() > 0.85
       @alive = true
     else
       @alive = false
     end
-  end
-
-  def despawn
-    @alive = false
   end
 
   def to_s
@@ -76,21 +82,17 @@ class Cell
     end
   end
 
-  def spawn
-    @alive = true
-  end
-
   def dead?
     return not(@alive)
   end
 
   def check_neighbours
-    neighbours = @field.get_neighbours(@x, @y).reject!{|cell| cell.dead?}
-    if neighbours.length == 3
-      spawn
-    elsif neighbours.length < 2 or neighbours.length > 3
-      despawn
+    #neighbours = @field.get_neighbours(@x, @y)
+    neighbours = rand(9)
+    if neighbours == 3
+      @alive = true
     else
+      @alive = false
     end
   end
 
@@ -104,11 +106,8 @@ def fill_field(field)
   end
 end
 
-field = Field.new(10, 10)
-
+field = Field.new(50, 50)
 fill_field(field)
-
-#print field.get_neighbours(5, 5).delete_if{|cell| cell.dead?}
 
 loop do
   field.defecate
