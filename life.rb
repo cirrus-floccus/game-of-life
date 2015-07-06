@@ -18,12 +18,12 @@ class Field
 
   def get_neighbours(x, y)
     neighbours = []
-    for x in (-1..1)
-      for y in (-1..1)
-        if x == 0 and y == 0
+    for dx in (-1..1)
+      for dy in (-1..1)
+        if dx == 0 and dy== 0
           #Хэй, мэн, оно ж ничего не делает!
         else
-          neighbours.push(read_at(x, y))
+          neighbours.push(read_at((x+dx), (y+dy)))
         end
       end
     end
@@ -32,7 +32,7 @@ class Field
 
 
   def write_at(x, y, element) 
-    if x < 0 or x > @width or y < 0 or y > @length
+    if x < 0 or x >= @width or y < 0 or y >= @length
     else
        @impl[@width * y + x] = element
     end
@@ -64,7 +64,7 @@ class Cell
     @y = y
     @field = field
     field.write_at(x, y, self)
-    if rand() > 0.85
+    if rand() > 0.5
       @alive = true
     else
       @alive = false
@@ -94,27 +94,27 @@ class Cell
 
 end
 
-def fill_field(field, element)
+def fill_field(field)
   for x in 0..field.width
     for y in 0..field.length
-      field.write_at(x, y, element)
+      field.write_at(x, y, Cell.new(field, x, y))
     end
   end
 end
 
 field = Field.new(50, 50)
-#fill_field(field, Cell.new(field, x, y))
+fill_field(field)
 
-#loop do
-#  field.defecate
-#  field.next_turn
-#  gets
-#end
-fill_field(field, '.')
-field.write_at(50, 50, 'x')
-field.write_at(49, 49, 'x')
-field.defecate
-
+loop do
+  field.defecate
+  field.next_turn
+  gets
+end
+#fill_field(field, '.')
+#field.write_at(50, 50, 'x')
+#field.write_at(49, 49, 'x')
+#field.defecate
+#
 __END__
 ○
 ●
