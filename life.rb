@@ -87,8 +87,7 @@ class Cell
   end
 
   def check_neighbours
-    #neighbours = @field.get_neighbours(@x, @y)
-    neighbours = rand(9)
+    neighbours = @field.get_neighbours(@x, @y)
     if neighbours == 3
       @alive = true
     else
