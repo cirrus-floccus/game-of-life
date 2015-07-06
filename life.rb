@@ -32,9 +32,9 @@ class Field
 
 
   def write_at(x, y, element) 
-    if x < 0 or x >= @width or y < 0 or y >= @length
+    if x < 0 or x > @width or y < 0 or y > @length
     else
-      return @impl[@width * y + x] = element
+       @impl[@width * y + x] = element
     end
   end
 
@@ -94,23 +94,25 @@ class Cell
 
 end
 
-def fill_field(field)
+def fill_field(field, element)
   for x in 0..field.width
     for y in 0..field.length
-      field.write_at(x, y, Cell.new(field, x, y))
+      field.write_at(x, y, element)
     end
   end
 end
 
 field = Field.new(50, 50)
-#fill_field(field)
+#fill_field(field, Cell.new(field, x, y))
 
 #loop do
 #  field.defecate
 #  field.next_turn
 #  gets
 #end
-field.write_at(0, 0, 'x')
+fill_field(field, '.')
+field.write_at(50, 50, 'x')
+field.write_at(49, 49, 'x')
 field.defecate
 
 __END__
